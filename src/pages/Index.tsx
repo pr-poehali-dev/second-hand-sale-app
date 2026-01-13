@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Separator } from '@/components/ui/separator';
 import Icon from '@/components/ui/icon';
+import Header from '@/components/Header';
+import CatalogSection from '@/components/CatalogSection';
+import CreateAdDialog from '@/components/CreateAdDialog';
 
 const PRODUCTS_API = 'https://functions.poehali.dev/1bf7564c-bb65-47c0-8719-4a63bd95be0e';
 
@@ -124,141 +123,12 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50">
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-purple-100 shadow-sm">
-        <nav className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="text-4xl">🛍️</div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-                БУшка
-              </span>
-            </div>
-            
-            <div className="hidden md:flex items-center gap-8">
-              <button 
-                onClick={() => scrollToSection('home')}
-                className="text-gray-700 hover:text-primary transition-colors font-medium"
-              >
-                Главная
-              </button>
-              <button 
-                onClick={() => scrollToSection('catalog')}
-                className="text-gray-700 hover:text-primary transition-colors font-medium"
-              >
-                Каталог
-              </button>
-              <button 
-                onClick={() => scrollToSection('howto')}
-                className="text-gray-700 hover:text-primary transition-colors font-medium"
-              >
-                Как продать
-              </button>
-              <button 
-                onClick={() => scrollToSection('reviews')}
-                className="text-gray-700 hover:text-primary transition-colors font-medium"
-              >
-                Отзывы
-              </button>
-              <button 
-                onClick={() => scrollToSection('contacts')}
-                className="text-gray-700 hover:text-primary transition-colors font-medium"
-              >
-                Контакты
-              </button>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <Button 
-                className="hidden md:block bg-gradient-to-r from-primary via-secondary to-accent hover:opacity-90 transition-opacity"
-                onClick={() => setIsCreateAdOpen(true)}
-              >
-                Разместить объявление
-              </Button>
-              
-              <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-                <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon" className="md:hidden">
-                    <Icon name="Menu" size={24} />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="right" className="w-[300px] bg-white">
-                  <SheetHeader>
-                    <SheetTitle className="flex items-center gap-2">
-                      <div className="text-3xl">🛍️</div>
-                      <span className="text-xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-                        БУшка
-                      </span>
-                    </SheetTitle>
-                  </SheetHeader>
-                  <div className="flex flex-col gap-4 mt-8">
-                    <button 
-                      onClick={() => {
-                        scrollToSection('home');
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className="flex items-center gap-3 text-lg font-medium text-gray-700 hover:text-primary transition-colors p-3 hover:bg-purple-50 rounded-lg"
-                    >
-                      <Icon name="Home" size={20} />
-                      Главная
-                    </button>
-                    <button 
-                      onClick={() => {
-                        scrollToSection('catalog');
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className="flex items-center gap-3 text-lg font-medium text-gray-700 hover:text-primary transition-colors p-3 hover:bg-purple-50 rounded-lg"
-                    >
-                      <Icon name="Grid" size={20} />
-                      Каталог
-                    </button>
-                    <button 
-                      onClick={() => {
-                        scrollToSection('howto');
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className="flex items-center gap-3 text-lg font-medium text-gray-700 hover:text-primary transition-colors p-3 hover:bg-purple-50 rounded-lg"
-                    >
-                      <Icon name="TrendingUp" size={20} />
-                      Как продать
-                    </button>
-                    <button 
-                      onClick={() => {
-                        scrollToSection('reviews');
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className="flex items-center gap-3 text-lg font-medium text-gray-700 hover:text-primary transition-colors p-3 hover:bg-purple-50 rounded-lg"
-                    >
-                      <Icon name="Star" size={20} />
-                      Отзывы
-                    </button>
-                    <button 
-                      onClick={() => {
-                        scrollToSection('contacts');
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className="flex items-center gap-3 text-lg font-medium text-gray-700 hover:text-primary transition-colors p-3 hover:bg-purple-50 rounded-lg"
-                    >
-                      <Icon name="Mail" size={20} />
-                      Контакты
-                    </button>
-                    <Separator className="my-2" />
-                    <Button 
-                      className="w-full bg-gradient-to-r from-primary via-secondary to-accent hover:opacity-90 transition-opacity"
-                      onClick={() => {
-                        setIsMobileMenuOpen(false);
-                        setIsCreateAdOpen(true);
-                      }}
-                    >
-                      <Icon name="Plus" className="mr-2" size={18} />
-                      Разместить объявление
-                    </Button>
-                  </div>
-                </SheetContent>
-              </Sheet>
-            </div>
-          </div>
-        </nav>
-      </header>
+      <Header 
+        isMobileMenuOpen={isMobileMenuOpen}
+        setIsMobileMenuOpen={setIsMobileMenuOpen}
+        scrollToSection={scrollToSection}
+        onCreateAdClick={() => setIsCreateAdOpen(true)}
+      />
 
       <section id="home" className="py-20 px-6">
         <div className="container mx-auto">
@@ -346,182 +216,20 @@ const Index = () => {
         </div>
       </section>
 
-      <section id="catalog" className="py-20 px-6 bg-white/50">
-        <div className="container mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Актуальные объявления
-            </h2>
-            <p className="text-gray-600 text-lg">Свежие предложения от проверенных продавцов</p>
-          </div>
-
-          <Card className="mb-8 border-2">
-            <CardContent className="p-6">
-              <div className="space-y-4">
-                <div className="flex flex-col md:flex-row gap-4">
-                  <div className="flex-1">
-                    <div className="relative">
-                      <Icon name="Search" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-                      <Input 
-                        placeholder="Поиск по названию или описанию..."
-                        className="pl-10 border-2"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  <div className="w-full md:w-48">
-                    <select 
-                      className="w-full h-10 px-3 rounded-md border-2 border-input bg-background"
-                      value={selectedCategory}
-                      onChange={(e) => setSelectedCategory(e.target.value)}
-                    >
-                      <option value="Все">Все категории</option>
-                      {categories.map(cat => (
-                        <option key={cat.name} value={cat.name}>{cat.name}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
-                  <div className="flex gap-2 items-center flex-1">
-                    <Icon name="DollarSign" size={20} className="text-gray-600" />
-                    <Input 
-                      type="number"
-                      placeholder="Цена от"
-                      className="border-2 w-32"
-                      value={priceRange.min}
-                      onChange={(e) => setPriceRange({...priceRange, min: e.target.value})}
-                    />
-                    <span className="text-gray-500">—</span>
-                    <Input 
-                      type="number"
-                      placeholder="до"
-                      className="border-2 w-32"
-                      value={priceRange.max}
-                      onChange={(e) => setPriceRange({...priceRange, max: e.target.value})}
-                    />
-                  </div>
-                  
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input 
-                      type="checkbox"
-                      checked={onlyVerified}
-                      onChange={(e) => setOnlyVerified(e.target.checked)}
-                      className="w-4 h-4 text-primary border-2 rounded focus:ring-2 focus:ring-primary"
-                    />
-                    <Icon name="BadgeCheck" size={18} className="text-green-600" />
-                    <span className="text-sm font-medium">Только проверенные</span>
-                  </label>
-
-                  {(searchQuery || selectedCategory !== 'Все' || priceRange.min || priceRange.max || onlyVerified) && (
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      onClick={() => {
-                        setSearchQuery('');
-                        setSelectedCategory('Все');
-                        setPriceRange({ min: '', max: '' });
-                        setOnlyVerified(false);
-                      }}
-                      className="text-primary hover:text-primary/80"
-                    >
-                      <Icon name="X" size={16} className="mr-1" />
-                      Сбросить
-                    </Button>
-                  )}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {loading ? (
-            <div className="text-center py-12">
-              <p className="text-xl text-gray-600">Загрузка товаров...</p>
-            </div>
-          ) : filteredProducts.length === 0 ? (
-            <div className="text-center py-16">
-              <div className="text-6xl mb-4">🔍</div>
-              <h3 className="text-2xl font-bold mb-2 text-gray-700">Ничего не найдено</h3>
-              <p className="text-gray-600 mb-6">Попробуйте изменить параметры поиска</p>
-              <Button 
-                variant="outline"
-                onClick={() => {
-                  setSearchQuery('');
-                  setSelectedCategory('Все');
-                  setPriceRange({ min: '', max: '' });
-                  setOnlyVerified(false);
-                }}
-                className="border-2 border-primary"
-              >
-                Сбросить фильтры
-              </Button>
-            </div>
-          ) : (
-            <>
-              <div className="mb-4 text-center">
-                <Badge variant="secondary" className="text-sm">
-                  Найдено товаров: {filteredProducts.length}
-                </Badge>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {filteredProducts.map((product, index) => (
-                <Card 
-                  key={product.id} 
-                  className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 hover:border-primary animate-scale-in group cursor-pointer"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                  onClick={() => handleProductClick(product)}
-                >
-                  <div className="aspect-square bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center text-8xl group-hover:scale-110 transition-transform">
-                    {product.image}
-                  </div>
-                <CardHeader>
-                  <div className="flex items-start justify-between mb-2">
-                    <Badge className="bg-gradient-to-r from-primary to-secondary">{product.category}</Badge>
-                    {product.verified && (
-                      <Badge variant="outline" className="border-green-500 text-green-600">
-                        <Icon name="BadgeCheck" size={14} className="mr-1" />
-                        Проверен
-                      </Badge>
-                    )}
-                  </div>
-                  <CardTitle className="text-lg">{product.title}</CardTitle>
-                  <CardDescription>
-                    <div className="flex items-center gap-2 mt-2">
-                      <Icon name="User" size={16} />
-                      <span>{product.seller}</span>
-                      <div className="flex items-center gap-1 ml-auto">
-                        <Icon name="Star" size={14} className="text-yellow-500 fill-yellow-500" />
-                        <span className="font-semibold">{product.rating}</span>
-                      </div>
-                    </div>
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between">
-                    <span className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                      {product.price.toLocaleString()} ₽
-                    </span>
-                    <Button size="sm" className="bg-gradient-to-r from-primary to-secondary">
-                      Купить
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-                ))}
-              </div>
-            </>
-          )}
-
-          <div className="text-center mt-12">
-            <Button size="lg" variant="outline" className="border-2 border-primary hover:bg-primary/10">
-              Показать все объявления
-              <Icon name="ArrowRight" className="ml-2" size={20} />
-            </Button>
-          </div>
-        </div>
-      </section>
+      <CatalogSection 
+        loading={loading}
+        filteredProducts={filteredProducts}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        priceRange={priceRange}
+        setPriceRange={setPriceRange}
+        onlyVerified={onlyVerified}
+        setOnlyVerified={setOnlyVerified}
+        categories={categories}
+        handleProductClick={handleProductClick}
+      />
 
       <section id="howto" className="py-20 px-6">
         <div className="container mx-auto max-w-4xl">
@@ -716,151 +424,14 @@ const Index = () => {
         </div>
       </footer>
 
-      <Dialog open={isCreateAdOpen} onOpenChange={setIsCreateAdOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              Разместить объявление
-            </DialogTitle>
-            <DialogDescription>
-              Заполните форму, чтобы опубликовать ваше объявление
-            </DialogDescription>
-          </DialogHeader>
-
-          <form className="space-y-6 mt-6" onSubmit={async (e) => {
-            e.preventDefault();
-            const success = await createProduct({
-              title: newAd.title,
-              price: parseInt(newAd.price),
-              category: newAd.category,
-              description: newAd.description,
-              location: newAd.location
-            });
-            
-            if (success) {
-              setIsCreateAdOpen(false);
-              setNewAd({ title: '', category: 'Электроника', price: '', location: '', description: '' });
-            }
-          }}>
-            <div>
-              <label className="block text-sm font-semibold mb-2 flex items-center gap-2">
-                <Icon name="Type" size={16} />
-                Название товара
-              </label>
-              <Input 
-                placeholder="Например: iPhone 13 Pro 256GB" 
-                className="border-2"
-                value={newAd.title}
-                onChange={(e) => setNewAd({...newAd, title: e.target.value})}
-                required
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-semibold mb-2 flex items-center gap-2">
-                  <Icon name="Grid" size={16} />
-                  Категория
-                </label>
-                <select 
-                  className="w-full h-10 px-3 rounded-md border-2 border-input bg-background"
-                  value={newAd.category}
-                  onChange={(e) => setNewAd({...newAd, category: e.target.value})}
-                >
-                  {categories.map(cat => (
-                    <option key={cat.name} value={cat.name}>{cat.name}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-semibold mb-2 flex items-center gap-2">
-                  <Icon name="DollarSign" size={16} />
-                  Цена (₽)
-                </label>
-                <Input 
-                  type="number" 
-                  placeholder="0" 
-                  className="border-2"
-                  value={newAd.price}
-                  onChange={(e) => setNewAd({...newAd, price: e.target.value})}
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold mb-2 flex items-center gap-2">
-                <Icon name="MapPin" size={16} />
-                Местоположение
-              </label>
-              <Input 
-                placeholder="Город, район" 
-                className="border-2"
-                value={newAd.location}
-                onChange={(e) => setNewAd({...newAd, location: e.target.value})}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold mb-2 flex items-center gap-2">
-                <Icon name="FileText" size={16} />
-                Описание
-              </label>
-              <Textarea 
-                placeholder="Подробно опишите состояние товара, комплектацию и другие важные детали..."
-                className="border-2 min-h-32"
-                value={newAd.description}
-                onChange={(e) => setNewAd({...newAd, description: e.target.value})}
-                required
-              />
-            </div>
-
-            <div className="p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl">
-              <div className="flex items-start gap-3 mb-4">
-                <Icon name="Camera" size={24} className="text-primary mt-1" />
-                <div>
-                  <h4 className="font-bold mb-1">Добавьте фотографии</h4>
-                  <p className="text-sm text-gray-600">Объявления с фото получают в 5 раз больше откликов</p>
-                </div>
-              </div>
-              <Button type="button" variant="outline" className="w-full border-2 border-primary hover:bg-primary/10">
-                <Icon name="Upload" className="mr-2" size={18} />
-                Загрузить фото
-              </Button>
-            </div>
-
-            <Separator />
-
-            <div className="flex items-start gap-3 p-4 bg-blue-50 rounded-xl border-2 border-blue-200">
-              <Icon name="ShieldCheck" size={24} className="text-blue-600 mt-1" />
-              <div>
-                <h4 className="font-bold text-blue-900 mb-1">Станьте проверенным продавцом</h4>
-                <p className="text-sm text-blue-700">Пройдите верификацию, чтобы увеличить доверие покупателей и продавать быстрее</p>
-              </div>
-            </div>
-
-            <div className="flex gap-3">
-              <Button 
-                type="button" 
-                variant="outline" 
-                className="flex-1 border-2"
-                onClick={() => setIsCreateAdOpen(false)}
-              >
-                Отмена
-              </Button>
-              <Button 
-                type="submit"
-                className="flex-1 bg-gradient-to-r from-primary via-secondary to-accent hover:opacity-90"
-              >
-                <Icon name="CheckCircle" className="mr-2" size={18} />
-                Опубликовать
-              </Button>
-            </div>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <CreateAdDialog 
+        isOpen={isCreateAdOpen}
+        onOpenChange={setIsCreateAdOpen}
+        newAd={newAd}
+        setNewAd={setNewAd}
+        categories={categories}
+        onSubmit={createProduct}
+      />
     </div>
   );
 };
