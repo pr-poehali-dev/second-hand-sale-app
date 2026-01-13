@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -9,12 +9,16 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/co
 import { Separator } from '@/components/ui/separator';
 import Icon from '@/components/ui/icon';
 
+const PRODUCTS_API = 'https://functions.poehali.dev/1bf7564c-bb65-47c0-8719-4a63bd95be0e';
+
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
-  const [selectedProduct, setSelectedProduct] = useState<typeof products[0] | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCreateAdOpen, setIsCreateAdOpen] = useState(false);
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [newAd, setNewAd] = useState({
     title: '',
     category: 'Электроника',
@@ -22,6 +26,42 @@ const Index = () => {
     location: '',
     description: ''
   });
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(PRODUCTS_API);
+      const data = await response.json();
+      setProducts(data.products || []);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const createProduct = async (productData: any) => {
+    try {
+      const response = await fetch(PRODUCTS_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(productData)
+      });
+      
+      if (response.ok) {
+        await fetchProducts();
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Error creating product:', error);
+      return false;
+    }
+  };
 
   const categories = [
     { name: 'Электроника', icon: 'Laptop', count: 1250 },
@@ -32,48 +72,7 @@ const Index = () => {
     { name: 'Авто', icon: 'Car', count: 430 }
   ];
 
-  const products = [
-    {
-      id: 1,
-      title: 'iPhone 13 Pro 256GB',
-      price: 65000,
-      seller: 'Анна К.',
-      rating: 4.9,
-      verified: true,
-      image: '📱',
-      category: 'Электроника'
-    },
-    {
-      id: 2,
-      title: 'Диван угловой, почти новый',
-      price: 28000,
-      seller: 'Михаил П.',
-      rating: 4.7,
-      verified: true,
-      image: '🛋️',
-      category: 'Мебель'
-    },
-    {
-      id: 3,
-      title: 'Велосипед горный 29"',
-      price: 18500,
-      seller: 'Сергей Д.',
-      rating: 4.8,
-      verified: true,
-      image: '🚴',
-      category: 'Спорт'
-    },
-    {
-      id: 4,
-      title: 'Куртка зимняя North Face',
-      price: 7200,
-      seller: 'Елена Р.',
-      rating: 5.0,
-      verified: true,
-      image: '🧥',
-      category: 'Одежда'
-    }
-  ];
+
 
   const reviews = [
     {
@@ -338,16 +337,22 @@ const Index = () => {
             <p className="text-gray-600 text-lg">Свежие предложения от проверенных продавцов</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {products.map((product, index) => (
-              <Card 
-                key={product.id} 
-                className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 hover:border-primary animate-scale-in group"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className="aspect-square bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center text-8xl group-hover:scale-110 transition-transform">
-                  {product.image}
-                </div>
+          {loading ? (
+            <div className="text-center py-12">
+              <p className="text-xl text-gray-600">Загрузка товаров...</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {products.map((product, index) => (
+                <Card 
+                  key={product.id} 
+                  className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 hover:border-primary animate-scale-in group cursor-pointer"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                  onClick={() => handleProductClick(product)}
+                >
+                  <div className="aspect-square bg-gradient-to-br from-purple-100 to-pink-100 flex items-center justify-center text-8xl group-hover:scale-110 transition-transform">
+                    {product.image}
+                  </div>
                 <CardHeader>
                   <div className="flex items-start justify-between mb-2">
                     <Badge className="bg-gradient-to-r from-primary to-secondary">{product.category}</Badge>
@@ -381,8 +386,9 @@ const Index = () => {
                   </div>
                 </CardContent>
               </Card>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
 
           <div className="text-center mt-12">
             <Button size="lg" variant="outline" className="border-2 border-primary hover:bg-primary/10">
@@ -597,10 +603,20 @@ const Index = () => {
             </DialogDescription>
           </DialogHeader>
 
-          <form className="space-y-6 mt-6" onSubmit={(e) => {
+          <form className="space-y-6 mt-6" onSubmit={async (e) => {
             e.preventDefault();
-            setIsCreateAdOpen(false);
-            setNewAd({ title: '', category: 'Электроника', price: '', location: '', description: '' });
+            const success = await createProduct({
+              title: newAd.title,
+              price: parseInt(newAd.price),
+              category: newAd.category,
+              description: newAd.description,
+              location: newAd.location
+            });
+            
+            if (success) {
+              setIsCreateAdOpen(false);
+              setNewAd({ title: '', category: 'Электроника', price: '', location: '', description: '' });
+            }
           }}>
             <div>
               <label className="block text-sm font-semibold mb-2 flex items-center gap-2">
