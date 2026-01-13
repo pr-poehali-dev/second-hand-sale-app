@@ -1,0 +1,41 @@
+{
+  "tests": [
+    {
+      "name": "Get verification status for user",
+      "method": "GET",
+      "path": "/?user_id=1",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "user_name": "string",
+        "verified": "boolean"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Get all pending requests",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "requests": "array"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Submit verification request",
+      "method": "POST",
+      "body": {
+        "user_id": 5,
+        "phone": "+7 (999) 111-22-33",
+        "email": "test@test.com",
+        "document_type": "passport",
+        "document_number": "1234 567890"
+      },
+      "expectedStatus": 201,
+      "expectedBody": {
+        "message": "string"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

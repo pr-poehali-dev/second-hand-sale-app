@@ -26,9 +26,10 @@ interface CreateAdDialogProps {
   setNewAd: (ad: NewAd) => void;
   categories: Category[];
   onSubmit: (ad: any) => Promise<boolean>;
+  onVerificationClick?: () => void;
 }
 
-const CreateAdDialog = ({ isOpen, onOpenChange, newAd, setNewAd, categories, onSubmit }: CreateAdDialogProps) => {
+const CreateAdDialog = ({ isOpen, onOpenChange, newAd, setNewAd, categories, onSubmit, onVerificationClick }: CreateAdDialogProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -150,13 +151,21 @@ const CreateAdDialog = ({ isOpen, onOpenChange, newAd, setNewAd, categories, onS
 
           <Separator />
 
-          <div className="flex items-start gap-3 p-4 bg-blue-50 rounded-xl border-2 border-blue-200">
+          <button 
+            type="button"
+            onClick={() => {
+              onOpenChange(false);
+              onVerificationClick?.();
+            }}
+            className="flex items-start gap-3 p-4 bg-blue-50 rounded-xl border-2 border-blue-200 hover:bg-blue-100 transition-colors w-full text-left"
+          >
             <Icon name="ShieldCheck" size={24} className="text-blue-600 mt-1" />
-            <div>
+            <div className="flex-1">
               <h4 className="font-bold text-blue-900 mb-1">Станьте проверенным продавцом</h4>
               <p className="text-sm text-blue-700">Пройдите верификацию, чтобы увеличить доверие покупателей и продавать быстрее</p>
             </div>
-          </div>
+            <Icon name="ArrowRight" size={20} className="text-blue-600 mt-1" />
+          </button>
 
           <div className="flex gap-3">
             <Button 

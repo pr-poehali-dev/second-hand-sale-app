@@ -8,6 +8,7 @@ import Header from '@/components/Header';
 import CatalogSection from '@/components/CatalogSection';
 import CreateAdDialog from '@/components/CreateAdDialog';
 import ProductDetailModal from '@/components/ProductDetailModal';
+import VerificationDialog from '@/components/VerificationDialog';
 
 const PRODUCTS_API = 'https://functions.poehali.dev/1bf7564c-bb65-47c0-8719-4a63bd95be0e';
 
@@ -30,6 +31,8 @@ const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState('Все');
   const [priceRange, setPriceRange] = useState({ min: '', max: '' });
   const [onlyVerified, setOnlyVerified] = useState(false);
+  const [isVerificationOpen, setIsVerificationOpen] = useState(false);
+  const [currentUserId] = useState(1);
 
   useEffect(() => {
     fetchProducts();
@@ -432,12 +435,22 @@ const Index = () => {
         setNewAd={setNewAd}
         categories={categories}
         onSubmit={createProduct}
+        onVerificationClick={() => setIsVerificationOpen(true)}
       />
 
       <ProductDetailModal 
         isOpen={isModalOpen}
         onOpenChange={setIsModalOpen}
         product={selectedProduct}
+      />
+
+      <VerificationDialog 
+        isOpen={isVerificationOpen}
+        onOpenChange={setIsVerificationOpen}
+        userId={currentUserId}
+        onSuccess={() => {
+          alert('Заявка успешно отправлена!');
+        }}
       />
     </div>
   );
