@@ -423,7 +423,14 @@ const Index = () => {
             </div>
           </div>
           <div className="text-center mt-8 pt-8 border-t border-gray-700">
-            <p className="text-gray-400">© 2024 БУшка. Безопасная покупка и продажа б/у товаров</p>
+            <p className="text-gray-400 mb-4">© 2024 БУшка. Безопасная покупка и продажа б/у товаров</p>
+            <a 
+              href="/admin" 
+              className="inline-flex items-center gap-2 text-gray-500 hover:text-primary transition-colors text-sm"
+            >
+              <Icon name="ShieldCheck" size={16} />
+              Админ-панель
+            </a>
           </div>
         </div>
       </footer>
