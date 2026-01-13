@@ -2,15 +2,17 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
 import Icon from '@/components/ui/icon';
+import NotificationBell from './NotificationBell';
 
 interface HeaderProps {
   isMobileMenuOpen: boolean;
   setIsMobileMenuOpen: (open: boolean) => void;
   scrollToSection: (section: string) => void;
   onCreateAdClick: () => void;
+  userId: number;
 }
 
-const Header = ({ isMobileMenuOpen, setIsMobileMenuOpen, scrollToSection, onCreateAdClick }: HeaderProps) => {
+const Header = ({ isMobileMenuOpen, setIsMobileMenuOpen, scrollToSection, onCreateAdClick, userId }: HeaderProps) => {
   return (
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-purple-100 shadow-sm">
       <nav className="container mx-auto px-6 py-4">
@@ -56,6 +58,7 @@ const Header = ({ isMobileMenuOpen, setIsMobileMenuOpen, scrollToSection, onCrea
           </div>
 
           <div className="flex items-center gap-3">
+            <NotificationBell userId={userId} />
             <Button 
               className="hidden md:block bg-gradient-to-r from-primary via-secondary to-accent hover:opacity-90 transition-opacity"
               onClick={onCreateAdClick}

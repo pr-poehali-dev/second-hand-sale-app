@@ -8,6 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import Icon from '@/components/ui/icon';
 
 const VERIFICATION_API = 'https://functions.poehali.dev/3230ddfa-8fb7-462a-a355-6b873d5d8824';
+const NOTIFICATIONS_API = 'https://functions.poehali.dev/55d98f15-8033-4d27-ac50-67ade721280a';
 
 interface VerificationRequest {
   id: number;
@@ -58,6 +59,18 @@ const Admin = () => {
       });
 
       if (response.ok) {
+        if (selectedRequest) {
+          await fetch(NOTIFICATIONS_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user_id: selectedRequest.user_id,
+              type: 'verification_approved',
+              title: 'Верификация одобрена',
+              message: 'Поздравляем! Ваша заявка на верификацию одобрена. Теперь у вас есть бейдж "Проверенный продавец" и ваши объявления получат приоритет в поиске!'
+            })
+          });
+        }
         await fetchRequests();
         setIsReviewModalOpen(false);
         setSelectedRequest(null);
@@ -90,6 +103,18 @@ const Admin = () => {
       });
 
       if (response.ok) {
+        if (selectedRequest) {
+          await fetch(NOTIFICATIONS_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user_id: selectedRequest.user_id,
+              type: 'verification_rejected',
+              title: 'Заявка отклонена',
+              message: `К сожалению, ваша заявка на верификацию отклонена. Причина: ${rejectionReason}. Вы можете подать заявку повторно после исправления указанных недостатков.`
+            })
+          });
+        }
         await fetchRequests();
         setIsReviewModalOpen(false);
         setSelectedRequest(null);

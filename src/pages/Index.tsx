@@ -132,6 +132,7 @@ const Index = () => {
         setIsMobileMenuOpen={setIsMobileMenuOpen}
         scrollToSection={scrollToSection}
         onCreateAdClick={() => setIsCreateAdOpen(true)}
+        userId={currentUserId}
       />
 
       <section id="home" className="py-20 px-6">

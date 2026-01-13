@@ -1,0 +1,45 @@
+{
+  "tests": [
+    {
+      "name": "Get notifications for user",
+      "method": "GET",
+      "path": "/?user_id=2",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "notifications": "array",
+        "unread_count": "number"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Create notification",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "user_id": 1,
+        "type": "verification_approved",
+        "title": "Test notification",
+        "message": "This is a test message"
+      },
+      "expectedStatus": 201,
+      "expectedBody": {
+        "success": true,
+        "notification_id": "number"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Mark notification as read",
+      "method": "PUT",
+      "path": "/",
+      "body": {
+        "notification_id": 1
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
