@@ -7,6 +7,7 @@ import Icon from '@/components/ui/icon';
 import Header from '@/components/Header';
 import CatalogSection from '@/components/CatalogSection';
 import CreateAdDialog from '@/components/CreateAdDialog';
+import ProductDetailModal from '@/components/ProductDetailModal';
 
 const PRODUCTS_API = 'https://functions.poehali.dev/1bf7564c-bb65-47c0-8719-4a63bd95be0e';
 
@@ -431,6 +432,12 @@ const Index = () => {
         setNewAd={setNewAd}
         categories={categories}
         onSubmit={createProduct}
+      />
+
+      <ProductDetailModal 
+        isOpen={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        product={selectedProduct}
       />
     </div>
   );
