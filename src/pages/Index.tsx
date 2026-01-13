@@ -8,6 +8,10 @@ import Icon from '@/components/ui/icon';
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
+  const [selectedCategory, setSelectedCategory] = useState('Все');
+  const [priceRange, setPriceRange] = useState('all');
+  const [onlyVerified, setOnlyVerified] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const categories = [
     { name: 'Электроника', icon: 'Laptop', count: 1250 },
@@ -90,6 +94,19 @@ const Index = () => {
     const element = document.getElementById(section);
     element?.scrollIntoView({ behavior: 'smooth' });
   };
+
+  const filteredProducts = products.filter(product => {
+    const matchesCategory = selectedCategory === 'Все' || product.category === selectedCategory;
+    const matchesVerified = !onlyVerified || product.verified;
+    const matchesSearch = product.title.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    let matchesPrice = true;
+    if (priceRange === 'low') matchesPrice = product.price < 10000;
+    if (priceRange === 'medium') matchesPrice = product.price >= 10000 && product.price < 30000;
+    if (priceRange === 'high') matchesPrice = product.price >= 30000;
+    
+    return matchesCategory && matchesVerified && matchesSearch && matchesPrice;
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50">
@@ -238,8 +255,88 @@ const Index = () => {
             <p className="text-gray-600 text-lg">Свежие предложения от проверенных продавцов</p>
           </div>
 
+          <Card className="mb-8 border-2">
+            <CardContent className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold mb-2">Поиск</label>
+                  <div className="relative">
+                    <Icon name="Search" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                    <Input 
+                      placeholder="Найти товар..." 
+                      className="pl-10"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold mb-2">Категория</label>
+                  <select 
+                    className="w-full h-10 px-3 rounded-md border border-input bg-background"
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                  >
+                    <option value="Все">Все категории</option>
+                    {categories.map(cat => (
+                      <option key={cat.name} value={cat.name}>{cat.name}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold mb-2">Цена</label>
+                  <select 
+                    className="w-full h-10 px-3 rounded-md border border-input bg-background"
+                    value={priceRange}
+                    onChange={(e) => setPriceRange(e.target.value)}
+                  >
+                    <option value="all">Любая цена</option>
+                    <option value="low">До 10 000 ₽</option>
+                    <option value="medium">10 000 - 30 000 ₽</option>
+                    <option value="high">От 30 000 ₽</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold mb-2">Фильтры</label>
+                  <label className="flex items-center gap-2 h-10 cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      className="w-4 h-4 rounded border-gray-300"
+                      checked={onlyVerified}
+                      onChange={(e) => setOnlyVerified(e.target.checked)}
+                    />
+                    <span className="text-sm">Только проверенные</span>
+                    <Icon name="ShieldCheck" size={16} className="text-green-600" />
+                  </label>
+                </div>
+              </div>
+
+              <div className="mt-4 flex items-center justify-between">
+                <p className="text-sm text-gray-600">
+                  Найдено: <span className="font-semibold text-primary">{filteredProducts.length}</span> товаров
+                </p>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => {
+                    setSelectedCategory('Все');
+                    setPriceRange('all');
+                    setOnlyVerified(false);
+                    setSearchQuery('');
+                  }}
+                >
+                  <Icon name="X" size={16} className="mr-1" />
+                  Сбросить фильтры
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {products.map((product, index) => (
+            {filteredProducts.map((product, index) => (
               <Card 
                 key={product.id} 
                 className="overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 hover:border-primary animate-scale-in group"
